@@ -3,7 +3,6 @@ package rzluramartian
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -43,9 +42,10 @@ func (m *Header2BodyModifier) ModifyRequest(req *http.Request) error {
 		if err != nil {
 			return err
 		}
-
 		switch m.ContentType {
-		case _contentType_applicationJSON:
+		default:
+
+			// default is application/json
 			data := make(map[string]interface{})
 			json.Unmarshal(body, &data) // Skip error even if it is failed
 
@@ -58,13 +58,14 @@ func (m *Header2BodyModifier) ModifyRequest(req *http.Request) error {
 			if err != nil {
 				return err
 			}
-		default:
-			return fmt.Errorf("unsupport content-type")
+			req.Header.Del(_contentTypeHeader)
+			req.Header.Set(_contentTypeHeader, _contentType_applicationJSON)
 		}
 
 	} else {
 		switch m.ContentType {
-		case _contentType_applicationJSON:
+		default:
+			// default is application/json
 			data := make(map[string]interface{})
 
 			for _, k := range m.keysToExtract {
@@ -77,8 +78,8 @@ func (m *Header2BodyModifier) ModifyRequest(req *http.Request) error {
 			if err != nil {
 				return err
 			}
-		default:
-			return fmt.Errorf("unsupport content-type")
+			req.Header.Del(_contentTypeHeader)
+			req.Header.Set(_contentTypeHeader, _contentType_applicationJSON)
 		}
 	}
 	req.ContentLength = int64(len(buf))

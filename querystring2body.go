@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	_contentType_applicationJSON = "appliction/json"
+	_contentType_applicationJSON = "application/json"
+	_contentType_applicationXML  = "application/xml"
 	_contentTypeHeader           = "Content-Type"
 )
 
