@@ -39,6 +39,7 @@ func NewConfiguredBackendFactory(logger logging.Logger, ref func(*config.Backend
 	parse.Register("static.Modifier", staticModifierFromJSON)
 	parse.Register("body.FromQueryString", queryModifierFromJSON)
 	parse.Register("body.FromHeader", headerModifierFromJSON)
+	parse.Register("request.Transform", requestTransformerFromJSON)
 	return func(remote *config.Backend) proxy.Proxy {
 		re := ref(remote)
 		result, ok := ConfigGetter(remote.ExtraConfig).(Result)
