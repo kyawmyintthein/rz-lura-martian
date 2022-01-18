@@ -3,6 +3,7 @@ package rzluramartian
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -21,6 +22,10 @@ type (
 	}
 )
 
+var (
+	_unexpectedContentTypeErr = fmt.Errorf("unexpected content-type")
+)
+
 func headerModifierFromJSON(b []byte) (*parse.Result, error) {
 	cfg := &HeaderModifierConfig{}
 	if err := json.Unmarshal(b, cfg); err != nil {
@@ -36,6 +41,10 @@ func headerModifierFromJSON(b []byte) (*parse.Result, error) {
 
 func (m *Header2BodyModifier) ModifyRequest(req *http.Request) error {
 	var buf []byte
+
+	if req.Header.Get(_contentTypeHeader) != _contentType_applicationJSON {
+		return _unexpectedContentTypeErr
+	}
 
 	if req.Body != nil {
 		body, err := ioutil.ReadAll(req.Body)

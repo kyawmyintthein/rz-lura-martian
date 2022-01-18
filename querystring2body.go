@@ -22,6 +22,7 @@ type (
 		Template      string   `json:"template"`
 		ContentType   string   `json:"content_type"`
 	}
+
 	Query2BodyModifier struct {
 		keysToExtract []string
 		template      *template.Template
@@ -53,7 +54,7 @@ func (m *Query2BodyModifier) ModifyRequest(req *http.Request) error {
 
 	buf := new(bytes.Buffer)
 	if err := m.template.Execute(buf, query); err != nil {
-		return err
+		return nil
 	}
 
 	for _, k := range m.keysToExtract {
